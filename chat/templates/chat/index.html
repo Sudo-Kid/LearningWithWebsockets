@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html ng-app="chatApp">
+<head>
+<title>Chat APP</title>
+<script src="{% static "chat/angular.min.js" %}"></script>
+</head>
+
+<body>
+<section>
+	<ul ng-controller="MessagesController">
+		<li ng-repeat="msg in messages">[[ msg.user ]]: [[ msg.message ]]</li>
+		<li>[[ msgText ]]</li>
+  </ul>
+	<input type="text" ng-model="msgText" />
+</section>
+<script src="{% static "chat/angular-route.min.js" %}"></script>
+<script src="{% static "chat/angular-animate.min.js" %}"></script>
+<script>
+	var app = angular.module('chatApp', ['ngWebSocket']);
+
+	app.config(function($interpolateProvider) {
+    $interpolateProvider.startSymbol('[[');
+    $interpolateProvider.endSymbol(']]');
+  });
+
+	app.controller('MessagesController', function($scope) {
+			$scope.messages= [
+					{"id": 1, "user": "ted", "message": "test1"},
+					{"id": 2, "user": "fred", "message": "test2"},
+					{"id": 3, "user": "ted", "message": "test3"},
+					{"id": 4, "user": "fred", "message": "test4"},
+			];
+	});
+
+	app.factory('messagesFactory', function($websocket) {
+		var dataStream = $websocket('ws://localhost:8000/chat/');
+
+		var collection = [];
+
+		dataStream.onMessage(function(message) {
+			collection.push(JSON.parse(message.data));
+		});
+
+		var methods = {
+			collection: collection,
+			get: function() {
+				dataStream.send(JSON.stringify({action: 'get' }));
+			}
+		});
+
+		return methods;
+
+	})
+
+  socket = new WebSocket("ws://" + window.location.host + "/chat/");
+  socket.onmessage = function(e) {
+      alert(e.data);
+  }
+  socket.onopen = function() {
+      socket.send("hello world");
+  }
+
+</script>
+</body>
+</html>
