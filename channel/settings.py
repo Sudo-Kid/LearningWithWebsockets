@@ -148,6 +148,12 @@ class ProductionSettings(BaseSettings):
 
     ALLOWED_HOSTS = ['mighty-escarpment-63976.herokuapp.com']
 
+    @property
+    def MIDDLEWARE_CLASSES(self):
+        return super(BaseSettings).MIDDLEWARE_CLASSES + [
+            'whitenoise.middleware.WhiteNoiseMiddleware',
+        ]
+
     CHANNEL_LAYERS = {
         'default': {
             'BACKEND': 'asgi_redis.RedisChannelLayer',
@@ -161,6 +167,17 @@ class ProductionSettings(BaseSettings):
     PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
     STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+
+    # Static files (CSS, JavaScript, Images)
+    # https://docs.djangoproject.com/en/1.9/howto/static-files/
+    STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+    STATIC_URL = '/static/'
+
+    # Extra places for collectstatic to find static files.
+    STATICFILES_DIRS = (
+        os.path.join(PROJECT_ROOT, 'static'),
+    )
 
 MODE = os.environ.get('DJANGO_MODE', 'Base')
 cbs.apply('{}Settings'.format(MODE.title()), globals())
