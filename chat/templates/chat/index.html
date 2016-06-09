@@ -28,7 +28,7 @@
     });
 
 	app.factory('MessagesFactory', function($websocket) {
-		var dataStream = $websocket('ws://localhost:8000/chat/');
+		var dataStream = $websocket('wss://localhost:8000/chat/');
 
 		var collection = [];
 
