@@ -160,7 +160,7 @@ class ProductionSettings(BaseSettings):
         'default': {
             'BACKEND': 'asgi_redis.RedisChannelLayer',
             'CONFIG': {
-                'hosts': [(REDIS_HOST, REDIS_PORT)],
+                'hosts': [('ec2-174-129-243-209.compute-1.amazonaws.com', 12799)],
             },
             'ROUTING': 'channel.routing.channel_routing',
         },
