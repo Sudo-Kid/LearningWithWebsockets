@@ -1,1 +1,2 @@
-web: gunicorn channels.wsgi --log-file -
+web: gunicorn gettingstarted.wsgi --log-file -
+worker: python manage.py runworker -v2
