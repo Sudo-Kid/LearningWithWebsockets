@@ -39,7 +39,7 @@
 		});
 
         dataStream.onOpen(function(message) {
-            //dataStream.send(JSON.stringify(message));
+            dataStream.send(JSON.stringify(message));
         });
 
 		return {
