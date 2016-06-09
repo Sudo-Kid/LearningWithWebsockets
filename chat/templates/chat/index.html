@@ -28,7 +28,8 @@
     });
 
 	app.factory('MessagesFactory', function($websocket) {
-		var dataStream = $websocket('wss://mighty-escarpment-63976.herokuapp.com/chat/');
+		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+		var dataStream = $websocket(ws_scheme + '://' + + window.location.host + '/chat/');
 
 		var collection = [];
 
