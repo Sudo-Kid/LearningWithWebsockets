@@ -30,8 +30,7 @@
 	app.factory('MessagesFactory', function($websocket) {
 		var dataStream = $websocket('ws://localhost:8000/chat/');
 
-        var testData = {"user": "User1", "msgText": "Test Message!"};
-		var collection = [testData];
+		var collection = [];
 
 		dataStream.onMessage(function(message) {
             console.log('onMessage', message);
@@ -39,7 +38,7 @@
 		});
 
         dataStream.onOpen(function(message) {
-            dataStream.send(JSON.stringify(message));
+					//dataStream.send(JSON.stringify(message));
         });
 
 		return {
@@ -56,20 +55,10 @@
 
         $scope.submit = function(user, msgText) {
             MessagesFactory.send({"user": user, "msgText": msgText});
+						$scope.user = '';
+						$scope.msgText = '';
         }
     });
-
-    /**
-    socket = new WebSocket("ws://" + window.location.host + "/chat/");
-
-    socket.onmessage = function(e) {
-        alert(e.data);
-    };
-
-    socket.onopen = function() {
-        socket.send(JSON.stringify({"test": "test"}));
-    };
-    **/
 
 </script>
 </body>
