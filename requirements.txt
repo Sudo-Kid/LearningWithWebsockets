@@ -12,3 +12,4 @@ txaio==2.5.1
 zope.interface==4.1.3
 django-classy-settings==2.0.1
 gunicorn
+whitenoise
