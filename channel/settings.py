@@ -146,7 +146,7 @@ class ProductionSettings(BaseSettings):
 
     DEBUG = False
 
-    ALLOWED_HOSTS = ['mighty-escarpment-63976.herokuapp.com']
+    ALLOWED_HOSTS = [os.getenv('HOSTS', 'chat.the-kid.me')]
 
     CHANNEL_LAYERS = {
         'default': {
