@@ -7,59 +7,69 @@
 </head>
 
 <body>
-<section>
-	<ul ng-controller="MessagesController">
-		<li ng-repeat="msg in messages">[[ msg.user ]]: [[ msg.message ]]</li>
-		<li>[[ msgText ]]</li>
-  </ul>
-	<input type="text" ng-model="msgText" />
+<section ng-controller="MessagesController">
+	<ul>
+		<li ng-repeat="msg in messages track by $index">[[ msg.user ]]: [[ msg.msgText ]]</li>
+    </ul>
+    <form ng-submit="submit(user, msgText)">
+        <input type="text" ng-model="user" placeholder="User"/>
+        <input type="text" ng-model="msgText" placeholder="Message Text" />
+        <Button type="submit">Send Message</Button>
+    </form>
 </section>
 <script src="{% static "chat/angular-route.min.js" %}"></script>
 <script src="{% static "chat/angular-animate.min.js" %}"></script>
+<script src="{% static "chat/angular-websocket.min.js" %}"></script>
 <script>
-	var app = angular.module('chatApp', ['ngWebSocket']);
+    var app = angular.module('chatApp', ['ngWebSocket']);
+        app.config(function($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+    });
 
-	app.config(function($interpolateProvider) {
-    $interpolateProvider.startSymbol('[[');
-    $interpolateProvider.endSymbol(']]');
-  });
-
-	app.controller('MessagesController', function($scope) {
-			$scope.messages= [
-					{"id": 1, "user": "ted", "message": "test1"},
-					{"id": 2, "user": "fred", "message": "test2"},
-					{"id": 3, "user": "ted", "message": "test3"},
-					{"id": 4, "user": "fred", "message": "test4"},
-			];
-	});
-
-	app.factory('messagesFactory', function($websocket) {
+	app.factory('MessagesFactory', function($websocket) {
 		var dataStream = $websocket('ws://localhost:8000/chat/');
 
-		var collection = [];
+        var testData = {"user": "User1", "msgText": "Test Message!"};
+		var collection = [testData];
 
 		dataStream.onMessage(function(message) {
-			collection.push(JSON.parse(message.data));
+            console.log('onMessage', message);
+            collection.push(JSON.parse(message.data));
 		});
 
-		var methods = {
-			collection: collection,
-			get: function() {
-				dataStream.send(JSON.stringify({action: 'get' }));
-			}
-		});
+        dataStream.onOpen(function(message) {
+            //dataStream.send(JSON.stringify(message));
+        });
 
-		return methods;
+		return {
+            collection: collection,
+            send: function(message) {
+                console.log(message);
+                dataStream.send(JSON.stringify(message));
+            }
+		};
+	});
 
-	})
+    app.controller('MessagesController', function($scope, MessagesFactory) {
+        $scope.messages = MessagesFactory.collection;
 
-  socket = new WebSocket("ws://" + window.location.host + "/chat/");
-  socket.onmessage = function(e) {
-      alert(e.data);
-  }
-  socket.onopen = function() {
-      socket.send("hello world");
-  }
+        $scope.submit = function(user, msgText) {
+            MessagesFactory.send({"user": user, "msgText": msgText});
+        }
+    });
+
+    /**
+    socket = new WebSocket("ws://" + window.location.host + "/chat/");
+
+    socket.onmessage = function(e) {
+        alert(e.data);
+    };
+
+    socket.onopen = function() {
+        socket.send(JSON.stringify({"test": "test"}));
+    };
+    **/
 
 </script>
 </body>
