@@ -144,14 +144,6 @@ class ProductionSettings(BaseSettings):
     def SECRET_KEY(self):
         return '!3$c_j8fbqfs(uu*vyb^b3ofuatuk#94v9!v4ojfnx(p+%5tn#'
 
-    @cbs.env(key='REDIS_HOST')
-    def REDIS_HOST(self):
-        return 'localhost'
-
-    @cbs.env(key='REDIS_PORT')
-    def REDIS_PORT(self):
-        return 6379
-
     DEBUG = False
 
     ALLOWED_HOSTS = ['mighty-escarpment-63976.herokuapp.com']
@@ -160,7 +152,7 @@ class ProductionSettings(BaseSettings):
         'default': {
             'BACKEND': 'asgi_redis.RedisChannelLayer',
             'CONFIG': {
-                'hosts': [('ec2-174-129-243-209.compute-1.amazonaws.com', 12799)],
+                'hosts': [os.getenv('REDIS_URL', ('localhost', 6379))],
             },
             'ROUTING': 'channel.routing.channel_routing',
         },
