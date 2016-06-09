@@ -3,7 +3,7 @@
 <html ng-app="chatApp">
 <head>
 <title>Chat APP</title>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+<script src="{% static "chat/angular.min.js" %}"></script>
 </head>
 
 <body>
@@ -17,9 +17,9 @@
         <Button type="submit">Send Message</Button>
     </form>
 </section>
-<script src="https://code.angularjs.org/1.5.6/angular-route.min.js"></script>
-<script src="https://code.angularjs.org/1.5.6/angular-animate.min.js"></script>
-<script src="https://rawgit.com/gdi2290/angular-websocket/v1.0.9/angular-websocket.js"></script>
+<script src="{% static "chat/angular-route.min.js" %}"></script>
+<script src="{% static "chat/angular-animate.min.js" %}"></script>
+<script src="{% static "chat/angular-websocket.min.js" %}"></script>
 <script>
     var app = angular.module('chatApp', ['ngWebSocket']);
         app.config(function($interpolateProvider) {
