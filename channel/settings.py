@@ -160,7 +160,7 @@ class ProductionSettings(BaseSettings):
         'default': {
             'BACKEND': 'asgi_redis.RedisChannelLayer',
             'CONFIG': {
-                'hosts': [(REDIS_HOST, int(REDIS_PORT))],
+                'hosts': [(REDIS_HOST, REDIS_PORT)],
             },
             'ROUTING': 'channel.routing.channel_routing',
         },
