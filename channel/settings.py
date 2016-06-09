@@ -150,7 +150,7 @@ class ProductionSettings(BaseSettings):
 
     @property
     def MIDDLEWARE_CLASSES(self):
-        return super(BaseSettings).MIDDLEWARE_CLASSES + [
+        return super(ProductionSettings, self).MIDDLEWARE_CLASSES + [
             'whitenoise.middleware.WhiteNoiseMiddleware',
         ]
 
