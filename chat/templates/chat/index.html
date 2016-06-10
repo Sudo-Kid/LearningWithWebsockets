@@ -56,7 +56,6 @@
 
         $scope.submit = function(user, msgText) {
             MessagesFactory.send({"user": user, "msgText": msgText});
-						$scope.user = '';
 						$scope.msgText = '';
         }
     });
