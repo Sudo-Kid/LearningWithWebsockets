@@ -40,7 +40,6 @@ class BaseSettings():
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
-        'django.contrib.sites',
         'channels',
         'chat',
     ]
