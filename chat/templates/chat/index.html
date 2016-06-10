@@ -3,56 +3,139 @@
 <html ng-app="chatApp">
 <head>
     <title>Chat APP</title>
+    <link rel="stylesheet"
+		href="{% static "chat/css/bootstrap.min.css" %}">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="{% static "chat/js/bootstrap.min.js" %}"></script>
+
+    <!--
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css">
     <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+    -->
     <script src="{% static "chat/angular.min.js" %}"></script>
     <style>
-       #chat-form {
-           position: fixed;
-           left: 0px;
-           bottom: 0px;
-           width: 100%;
-       }
+			/* Sticky footer styles
+			-------------------------------------------------- */
+			html {
+				position: relative;
+				min-height: 100%;
+			}
+			body {
+				/* Margin bottom by footer height */
+				margin-bottom: 60px;
+			}
+
+			.footer {
+				position: absolute;
+				bottom: 0;
+				width: 100%;
+				height: 60px;
+				background-color: #f5f5f5;
+			}
+
+		  .conversation-wrap {
+					box-shadow: -2px 0 3px #ddd;
+					padding:0;
+			}
+
+			.conversation {
+					padding:5px;
+					border-bottom:1px solid #ddd;
+					margin:0;
+			}
+
+			/* Custom page CSS
+			-------------------------------------------------- */
+			/* Not required for template or sticky footer method. */
+
+			body > .container {
+				padding: 60px 15px 0;
+			}
+			.container .text-muted {
+				margin: 20px 0;
+			}
+
+			.footer > .container {
+				padding-right: 15px;
+				padding-left: 15px;
+			}
+
+			code {
+				font-size: 80%;
+			}
     </style>
 </head>
 
-<body>
-<section ng-controller="MessagesController" id="container">
-    <header>
-        <h1>Live Chat</h1>
-    </header>
-    <ul>
-        <li ng-repeat="msg in messages track by $index">[[ msg.user ]]: [[ msg.msgText ]]</li>
-    </ul>
-    <footer id="chat-form" class="mdl-mini-footer">
-        <form ng-submit="submit(user, msgText)">
-            <div class="mdl-textfield mdl-js-textfield">
-                <input class="mdl-textfield__input" type="text" ng-model="user" id="user">
-                <label class="mdl-textfield__label" for="user">User</label>
-                <span class="mdl-textfield__error">Input is not a valid user!</span>
-            </div>
-            <div class="mdl-textfield mdl-js-textfield">
-                <input class="mdl-textfield__input" type="text" ng-model="msgText" id="msgText">
-                <label class="mdl-textfield__label" for="msgText">Message text....</label>
-                <span class="mdl-textfield__error">Input is not a valid!</span>
-           </div>
-            <button type="submit"
-                    class="mdl-button ml-js-button mdl-button--raised ml-js-ripple-effect ml-button--accent">
+<body ng-controller="MessagesController">
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Project name</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <!-- Begin page content -->
+    <div class="container conversation-wrapper"> 
+      <div class="conversation" ngView autoscroll>
+        <ul>
+          <li ng-repeat="msg in messages track by $index">[[ msg.user ]]: [[ msg.msgText ]]</li>
+        </ul>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="container">
+				<form ng-submit="submit(user, msgText)">
+            <input class="" type="text" ng-model="msgText" id="msgText">
+            <label class="" for="msgText">Message text....</label>
+            <button type="submit" id="submit">
                 Send Message
             </button>
         </form>
+      </div>
     </footer>
-</section>
 <script src="{% static "chat/angular-route.min.js" %}"></script>
 <script src="{% static "chat/angular-animate.min.js" %}"></script>
 <script src="{% static "chat/angular-websocket.min.js" %}"></script>
 <script>
-    var app = angular.module('chatApp', ['ngWebSocket']);
-        app.config(function($interpolateProvider) {
-        $interpolateProvider.startSymbol('[[');
-        $interpolateProvider.endSymbol(']]');
-    });
+	var app = angular.module('chatApp', ['ngWebSocket', 'ngRoute']);
+			app.config(function($interpolateProvider) {
+			$interpolateProvider.startSymbol('[[');
+			$interpolateProvider.endSymbol(']]');
+	});
 
 	app.factory('MessagesFactory', function($websocket) {
 		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
@@ -78,15 +161,15 @@
 		};
 	});
 
-    app.controller('MessagesController', function($scope, MessagesFactory) {
-        $scope.messages = MessagesFactory.collection;
+	app.controller('MessagesController', function($scope, MessagesFactory) {
+			$scope.user = '{{ request.user.username }}'
+			$scope.messages = MessagesFactory.collection;
 
-        $scope.submit = function(user, msgText) {
-            MessagesFactory.send({"user": user, "msgText": msgText});
-            $scope.msgText = '';
-        }
-    });
-
+			$scope.submit = function(user, msgText) {
+					MessagesFactory.send({"user": user, "msgText": msgText});
+					$scope.msgText = '';
+			}
+	});
 </script>
 </body>
 </html>
