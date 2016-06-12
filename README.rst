@@ -12,3 +12,8 @@ Python Requirements:
 - django-classy-settings==2.0.1
 
 Once you have installed Redis and preformed a `pip install -r requirements.txt` you should be able to just run the Django testing server with `./manage.py runserver`.
+
+Pull Requests
+=============
+
+Pull requests are welcomed if you want to make changes to the code please feel free to do so.
