@@ -4,7 +4,7 @@
 <head>
     <title>Chat APP</title>
     <link rel="stylesheet"
-		href="{% static "chat/css/bootstrap.min.css" %}">
+          href="{% static "chat/css/bootstrap.min.css" %}">
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
@@ -14,157 +14,148 @@
 
     <script src="{% static "chat/angular.min.js" %}"></script>
     <style>
-			/* Sticky footer styles
-			-------------------------------------------------- */
-			html {
-				position: relative;
-				min-height: 100%;
-			}
-			body {
-				/* Margin bottom by footer height */
-				margin-bottom: 60px;
-			}
+        /* Sticky footer styles
+        -------------------------------------------------- */
+        html {
+            position: relative;
+            min-height: 100%;
+        }
 
-			.footer {
-				position: absolute;
-				bottom: 0;
-				width: 100%;
-				height: 60px;
-				background-color: #f5f5f5;
-			}
+        body {
+            /* Margin bottom by footer height */
+            margin-bottom: 60px;
+        }
 
-			.conversation-wrap {
-					box-shadow: -2px 0 3px #ddd;
-					padding:0;
-			}
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #f5f5f5;
+        }
 
-			.conversation {
-					padding:5px;
-					border-bottom:1px solid #ddd;
-					margin:0;
-			}
+        .conversation-wrap {
+            box-shadow: -2px 0 3px #ddd;
+            padding: 0;
+        }
 
-			/* Custom page CSS
-			-------------------------------------------------- */
-			/* Not required for template or sticky footer method. */
+        .conversation {
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+            margin: 0;
+        }
 
-			body > .container {
-				padding: 60px 15px 0;
-			}
-			.container .text-muted {
-				margin: 20px 0;
-			}
+        /* Custom page CSS
+        -------------------------------------------------- */
+        /* Not required for template or sticky footer method. */
 
-			.footer > .container {
-				padding-right: 15px;
-				padding-left: 15px;
-			}
+        body > .container {
+            padding: 60px 15px 0;
+        }
 
-			code {
-				font-size: 80%;
-			}
+        .container .text-muted {
+            margin: 20px 0;
+        }
+
+        .footer > .container {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        code {
+            font-size: 80%;
+        }
     </style>
 </head>
 
 <body ng-controller="MessagesController">
 
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
+<!-- Fixed navbar -->
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
         <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Project name</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li role="separator" class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
-              </ul>
-            </li>
-          </ul>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="{%  url "user-profile:login-register"  %}">Register/Login</a></li>
+                <li><a href="{% url "logout" %}">Logout</a></li>
+            </ul>
         </div><!--/.nav-collapse -->
-      </div>
-    </nav>
-
-    <!-- Begin page content -->
-    <div class="container conversation-wrapper">
-      <div class="conversation">
-        <ul>
-          <li ng-repeat="msg in messages track by $index">[[ msg.user ]]: [[ msg.msgText ]]</li>
-        </ul>
-      </div>
     </div>
+</nav>
 
-    <footer class="footer">
-      <div class="container" id="bottom">
-				<form ng-submit="submit(user, msgText)">
+<!-- Begin page content -->
+<div class="container conversation-wrapper">
+    <div class="conversation">
+        <ul>
+            <li ng-repeat="msg in messages track by $index">[[ msg.user ]]: [[ msg.msgText ]]</li>
+        </ul>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container" id="bottom">
+        <form ng-submit="submit(user, msgText)">
             <input class="" type="text" ng-model="msgText" id="msgText">
             <label class="" for="msgText">Message text....</label>
             <button type="submit">
                 Send Message
             </button>
         </form>
-      </div>
-    </footer>
+    </div>
+</footer>
 <script src="{% static "chat/angular-route.min.js" %}"></script>
 <script src="{% static "chat/angular-animate.min.js" %}"></script>
 <script src="{% static "chat/angular-websocket.min.js" %}"></script>
 <script>
-	var app = angular.module('chatApp', ['ngWebSocket', 'ngRoute']);
-			app.config(function($interpolateProvider) {
-			$interpolateProvider.startSymbol('[[');
-			$interpolateProvider.endSymbol(']]');
-	});
+    var app = angular.module('chatApp', ['ngWebSocket', 'ngRoute']);
+    app.config(function ($interpolateProvider) {
+        $interpolateProvider.startSymbol('[[');
+        $interpolateProvider.endSymbol(']]');
+    });
 
-	app.factory('MessagesFactory', function($websocket) {
-		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-		var dataStream = $websocket(ws_scheme.concat('://', window.location.host, '/chat/'));
+    app.factory('MessagesFactory', function ($websocket) {
+        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+        var dataStream = $websocket(ws_scheme.concat('://', window.location.host, '/chat/'));
 
-		var collection = [];
+        var collection = [];
 
-		dataStream.onMessage(function(message) {
-			console.log('onMessage', message);
-			collection.push(JSON.parse(message.data));
-		});
+        dataStream.onMessage(function (message) {
+            console.log('onMessage', message);
+            collection.push(JSON.parse(message.data));
+        });
 
-        dataStream.onOpen(function(message) {
+        dataStream.onOpen(function (message) {
             //dataStream.send(JSON.stringify(message));
         });
 
-		return {
+        return {
             collection: collection,
-            send: function(message) {
+            send: function (message) {
                 console.log(message);
                 dataStream.send(JSON.stringify(message));
             }
-		};
-	});
+        };
+    });
 
-	app.controller('MessagesController', function($scope, MessagesFactory) {
-			$scope.user = '{{ request.user.username }}'
-			$scope.messages = MessagesFactory.collection;
+    app.controller('MessagesController', function ($scope, MessagesFactory) {
+        $scope.user = '{{ request.user.username }}'
+        $scope.messages = MessagesFactory.collection;
 
-			$scope.submit = function(user, msgText) {
-					MessagesFactory.send({"user": user, "msgText": msgText});
-					$scope.msgText = '';
-			}
-	});
+        $scope.submit = function (user, msgText) {
+            MessagesFactory.send({"user": user, "msgText": msgText});
+            $scope.msgText = '';
+        }
+    });
 </script>
 </body>
 </html>

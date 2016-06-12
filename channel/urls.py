@@ -16,7 +16,11 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from user_profile import views
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include('chat.urls')),
+    url(r'^login/', include('user_profile.urls', namespace='user-profile')),
+    url(r'^logout/$', views.Logout.as_view(), name='logout'),
+    url(r'^', include('chat.urls', namespace='chat')),
 ]

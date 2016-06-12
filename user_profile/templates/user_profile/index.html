@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login/Register</title>
+</head>
+<body>
+    <form method="POST" action="{% url "user-profile:login" %}">
+        {%  csrf_token %}
+        <ul>
+            {{ login_form.as_ul }}
+            <li><input type="submit" value="Login"></li>
+        </ul>
+    </form>
+    <form method="POST" action="{% url "user-profile:register" %}">
+        {%  csrf_token %}
+        <ul>
+            {{ register_form.as_ul }}
+            <li><input type="submit" value="Register"></li>
+        </ul>
+    </form>
+</body>
+</html>
