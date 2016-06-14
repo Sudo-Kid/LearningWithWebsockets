@@ -1,27 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login/Register</title>
-</head>
-<body>
-		{% if login_form %}
-    <form method="POST" action="{% url "user-profile:login" %}">
-        {%  csrf_token %}
-        <ul>
-            {{ login_form.as_ul }}
-            <li><input type="submit" value="Login"></li>
-        </ul>
-    </form>
-		{% endif %}
-		{% if login_form %}
-    <form method="POST" action="{% url "user-profile:register" %}">
-        {%  csrf_token %}
-        <ul>
-            {{ register_form.as_ul }}
-            <li><input type="submit" value="Register"></li>
-        </ul>
-    </form>
-		{% endif %}
-</body>
-</html>
+{% extends "chat/base.html" %}
+{% block title %}Login/Register{% endblock %}
+
+{% block content %}
+    <body ng-controller="Login">
+    <div class="container">
+        <div class="input-group">
+            {% if login_form %}
+                <form method="POST" action="{% url "user-profile:login" %}">
+                    {% csrf_token %}
+                    <ul>
+                        {{ login_form.as_ul }}
+                        <li><input type="submit" value="Login"></li>
+                    </ul>
+                </form>
+            {% endif %}
+        </div>
+
+        <div class="input-group">
+            {% if register_form %}
+                <form method="POST" action="{% url "user-profile:register" %}">
+                    {% csrf_token %}
+                    <ul>
+                        {{ register_form.as_ul }}
+                        <li><input type="submit" value="Register"></li>
+                    </ul>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        var app = angular.module('chatApp', ['ngWebSocket', 'ngRoute']);
+        app.config(function ($interpolateProvider) {
+            $interpolateProvider.startSymbol('[[');
+            $interpolateProvider.endSymbol(']]');
+        });
+
+        app.controller('Login', function ($scope) {
+
+        });
+    </script>
+{% endblock %}
