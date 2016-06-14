@@ -5,23 +5,24 @@
     <title>Login/Register</title>
 </head>
 <body>
-		{% if login_form %}
+{% if login_form %}
     <form method="POST" action="{% url "user-profile:login" %}">
-        {%  csrf_token %}
+        {% csrf_token %}
         <ul>
             {{ login_form.as_ul }}
             <li><input type="submit" value="Login"></li>
         </ul>
     </form>
-		{% endif %}
-		{% if login_form %}
+{% endif %}
+
+{% if register_form %}
     <form method="POST" action="{% url "user-profile:register" %}">
-        {%  csrf_token %}
+        {% csrf_token %}
         <ul>
             {{ register_form.as_ul }}
             <li><input type="submit" value="Register"></li>
         </ul>
     </form>
-		{% endif %}
+{% endif %}
 </body>
 </html>
