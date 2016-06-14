@@ -94,7 +94,7 @@
 
         app.factory('MessagesFactory', function ($websocket) {
             var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-            var dataStream = $websocket(ws_scheme.concat('://', window.location.host, '/chat/'));
+            var dataStream = $websocket(ws_scheme.concat('://', window.location.host, '/{{ chat_room }}/'));
 
             var collection = [];
 
