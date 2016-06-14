@@ -1,0 +1,35 @@
+{% extends "home/base.html" %}
+{% block title %}Login/Register{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+    {% if login_form %}
+        <form method="POST" action="{% url "home:login" %}">
+            {% csrf_token %}
+            <ul>
+                {{ login_form.as_ul }}
+                <li><input type="submit" value="Login"></li>
+            </ul>
+        </form>
+    {% endif %}
+</div>
+
+<div>
+    {% if register_form %}
+        <form method="POST" action="{% url "home:register" %}">
+            {% csrf_token %}
+            <ul>
+                {{ register_form.as_ul }}
+                <li><input type="submit" value="Register"></li>
+            </ul>
+        </form>
+    {% endif %}
+</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+    </script>
+{% endblock %}

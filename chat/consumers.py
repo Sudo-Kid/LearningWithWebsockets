@@ -5,13 +5,14 @@ from channels.auth import http_session_user
 from channels.auth import channel_session_user
 from channels.auth import channel_session_user_from_http
 
-from user_profile import models
+from . import models
 
 
 def select_group(request):
     group = request.content['path'].strip('/')
     if request.user.is_authenticated() and request.user.is_active:
-        user_groups = models.UserChatGroup.objects.filter(user__user=request.user, group__name=group)
+        user_groups = models.UserChatGroup.objects.filter(
+            user__user=request.user, group__name=group)
         if not user_groups:
             return ['auth-chat']
         return [user_groups[0].group.name]

@@ -41,8 +41,8 @@ class BaseSettings():
         'django.contrib.messages',
         'django.contrib.staticfiles',
         'channels',
+        'home',
         'chat',
-        'user_profile',
     ]
 
     MIDDLEWARE_CLASSES = [

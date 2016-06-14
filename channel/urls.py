@@ -16,12 +16,12 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from user_profile import views
+from home import views
 
 urlpatterns = [
     url(r'^logout/$', views.Logout.as_view(), name='logout'),
     url(r'^login/$', views.Login.as_view(), name='login'),
     url(r'^admin/', admin.site.urls),
-    url(r'^user/', include('user_profile.urls', namespace='user-profile')),
-    url(r'^', include('chat.urls', namespace='chat')),
+    url(r'^', include('home.urls', namespace='home')),
+    url(r'^chat/', include('chat.urls', namespace='chat')),
 ]

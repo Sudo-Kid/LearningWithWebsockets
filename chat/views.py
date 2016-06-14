@@ -4,7 +4,11 @@ from django.views.generic import View
 
 class Index(View):
     template_name = 'chat/index.html'
+    chat_group= None
 
     def get(self, request, *args, **kwargs):
-        chat_room = self.kwargs['chat_room']
-        return render(request, self.template_name, {'chat_room': chat_room})
+        if self.chat_group is None:
+            self.chat_group = self.kwargs['chat_group']
+        return render(request, self.template_name, {'chat_group':
+                      self.chat_group})
+

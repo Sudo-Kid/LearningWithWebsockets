@@ -4,126 +4,35 @@
 {% block title %}Chat{% endblock %}
 
 {% block extra_styles %}
-    <style>
-        /* Sticky footer styles
-        -------------------------------------------------- */
-        html {
-            position: relative;
-            min-height: 100%;
-        }
-
-        body {
-            /* Margin bottom by footer height */
-            margin-bottom: 60px;
-        }
-
-        .footer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 60px;
-            background-color: #f5f5f5;
-        }
-
-        .conversation-wrap {
-            box-shadow: -2px 0 3px #ddd;
-            padding: 0;
-        }
-
-        .conversation {
-            padding: 5px;
-            border-bottom: 1px solid #ddd;
-            margin: 0;
-        }
-
-        /* Custom page CSS
-        -------------------------------------------------- */
-        /* Not required for template or sticky footer method. */
-
-        body > .container {
-            padding: 60px 15px 0;
-        }
-
-        .container .text-muted {
-            margin: 20px 0;
-        }
-
-        .footer > .container {
-            padding-right: 15px;
-            padding-left: 15px;
-        }
-
-        code {
-            font-size: 80%;
-        }
-    </style>
 {% endblock %}
 
 {% block content %}
-    <body ng-controller="MessagesController">
-        {% include "chat/navbar.html" %}
-        <!-- Begin page content -->
-        <div class="container conversation-wrapper">
-            <div class="conversation">
-                <ul>
-                    <li ng-repeat="msg in messages track by $index">[[ msg.user ]]: [[ msg.msgText ]]</li>
-                </ul>
-            </div>
+    {% include "chat/navbar.html" %}
+    {{ chat_group }}
+    <div>
+        <div>
+            <ul>
+                <li>[[ msg.user ]]: [[ msg.msgText ]]</li>
+            </ul>
         </div>
+    </div>
 
-        <footer class="footer">
-            <div class="container" id="bottom">
-                <form ng-submit="submit(user, msgText)">
-                    <input class="" type="text" ng-model="msgText" id="msgText">
-                    <label class="" for="msgText">Message text....</label>
-                    <button type="submit">
-                        Send Message
-                    </button>
-                </form>
-            </div>
-        </footer>
+    <footer>
+        <div>
+            <form>
+                <input class="" type="text" id="msgText">
+                <label class="" for="msgText">Message text....</label>
+                <button type="submit">
+                    Send Message
+                </button>
+            </form>
+        </div>
+    </footer>
 {% endblock %}
 
 {% block extra_js %}
     <script>
-        var app = angular.module('chatApp', ['ngWebSocket', 'ngRoute']);
-        app.config(function ($interpolateProvider) {
-            $interpolateProvider.startSymbol('[[');
-            $interpolateProvider.endSymbol(']]');
-        });
-
-        app.factory('MessagesFactory', function ($websocket) {
-            var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-            var dataStream = $websocket(ws_scheme.concat('://', window.location.host, '/{{ chat_room }}/'));
-
-            var collection = [];
-
-            dataStream.onMessage(function (message) {
-                console.log('onMessage', message);
-                collection.push(JSON.parse(message.data));
-            });
-
-            dataStream.onOpen(function (message) {
-                //dataStream.send(JSON.stringify(message));
-            });
-
-            return {
-                collection: collection,
-                send: function (message) {
-                    console.log(message);
-                    dataStream.send(JSON.stringify(message));
-                }
-            };
-        });
-
-        app.controller('MessagesController', function ($scope, MessagesFactory) {
-            $scope.user = '{{ request.user.username }}'
-            $scope.messages = MessagesFactory.collection;
-
-            $scope.submit = function (user, msgText) {
-                MessagesFactory.send({"user": user, "msgText": msgText});
-                $scope.msgText = '';
-            }
-        });
+		var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+		var dataStream = $websocket(ws_scheme.concat('://', window.location.host, '/{{ chat_room }}/'));
     </script>
 {% endblock %}

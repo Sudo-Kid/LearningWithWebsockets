@@ -10,3 +10,4 @@ class Register(UserCreationForm):
 class Login(AuthenticationForm):
     class Meta:
         fields = ('username', 'password')
+

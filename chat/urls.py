@@ -4,6 +4,6 @@ from . import views
 
 
 urlpatterns = [
-    url(r'^$', views.Index.as_view(), name='index'),
-    url(r'^(?P<chat_room>[\w]+)/$', views.Index.as_view(), name='chat'),
+    url(r'^$', views.Index.as_view(chat_group='home'), name='chat'),
+    url(r'^(?P<chat_group>[\w]+)/$', views.Index.as_view(), name='group'),
 ]
