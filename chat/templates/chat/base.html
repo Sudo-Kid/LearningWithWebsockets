@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" ng-app="chatApp">
+<head>
+    <meta charset="UTF-8">
+    <title>LearningWithWebsockets - {% block title %}Home{% endblock %}</title>
+
+    <link rel="stylesheet"
+          href="{% static "chat/css/bootstrap.min.css" %}">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="{% static "chat/js/bootstrap.min.js" %}"></script>
+
+    <script src="{% static "chat/angular.min.js" %}"></script>
+
+    {% block extra_styles %}
+    {% endblock %}
+</head>
+
+
+{% block content %}
+    <body>
+    <h1>Hello there is no content!</h1>
+{% endblock %}
+
+<script src="{% static "chat/angular-route.min.js" %}"></script>
+<script src="{% static "chat/angular-animate.min.js" %}"></script>
+<script src="{% static "chat/angular-websocket.min.js" %}"></script>
+
+{% block extra_js %}
+    <script>
+        var app = angular.module('chatApp', ['ngWebSocket', 'ngRoute']);
+        app.config(function ($interpolateProvider) {
+            $interpolateProvider.startSymbol('[[');
+            $interpolateProvider.endSymbol(']]');
+        });
+    </script>
+{% endblock %}
+</body>
+</html>

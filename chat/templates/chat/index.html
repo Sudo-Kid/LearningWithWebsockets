@@ -1,18 +1,9 @@
-<!DOCTYPE html>
+{% extends "chat/base.html" %}
 {% load static %}
-<html ng-app="chatApp">
-<head>
-    <title>Chat APP</title>
-    <link rel="stylesheet"
-          href="{% static "chat/css/bootstrap.min.css" %}">
 
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+{% block title %}Chat{% endblock %}
 
-    <!-- Latest compiled JavaScript -->
-    <script src="{% static "chat/js/bootstrap.min.js" %}"></script>
-
-    <script src="{% static "chat/angular.min.js" %}"></script>
+{% block extra_styles %}
     <style>
         /* Sticky footer styles
         -------------------------------------------------- */
@@ -66,96 +57,73 @@
             font-size: 80%;
         }
     </style>
-</head>
+{% endblock %}
 
-<body ng-controller="MessagesController">
-
-<!-- Fixed navbar -->
-<nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-                    aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Project name</a>
+{% block content %}
+    <body ng-controller="MessagesController">
+        {% include "chat/navbar.html" %}
+        <!-- Begin page content -->
+        <div class="container conversation-wrapper">
+            <div class="conversation">
+                <ul>
+                    <li ng-repeat="msg in messages track by $index">[[ msg.user ]]: [[ msg.msgText ]]</li>
+                </ul>
+            </div>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="{%  url "user-profile:login-register"  %}">Register/Login</a></li>
-                <li><a href="{% url "logout" %}">Logout</a></li>
-            </ul>
-        </div><!--/.nav-collapse -->
-    </div>
-</nav>
 
-<!-- Begin page content -->
-<div class="container conversation-wrapper">
-    <div class="conversation">
-        <ul>
-            <li ng-repeat="msg in messages track by $index">[[ msg.user ]]: [[ msg.msgText ]]</li>
-        </ul>
-    </div>
-</div>
+        <footer class="footer">
+            <div class="container" id="bottom">
+                <form ng-submit="submit(user, msgText)">
+                    <input class="" type="text" ng-model="msgText" id="msgText">
+                    <label class="" for="msgText">Message text....</label>
+                    <button type="submit">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+        </footer>
+{% endblock %}
 
-<footer class="footer">
-    <div class="container" id="bottom">
-        <form ng-submit="submit(user, msgText)">
-            <input class="" type="text" ng-model="msgText" id="msgText">
-            <label class="" for="msgText">Message text....</label>
-            <button type="submit">
-                Send Message
-            </button>
-        </form>
-    </div>
-</footer>
-<script src="{% static "chat/angular-route.min.js" %}"></script>
-<script src="{% static "chat/angular-animate.min.js" %}"></script>
-<script src="{% static "chat/angular-websocket.min.js" %}"></script>
-<script>
-    var app = angular.module('chatApp', ['ngWebSocket', 'ngRoute']);
-    app.config(function ($interpolateProvider) {
-        $interpolateProvider.startSymbol('[[');
-        $interpolateProvider.endSymbol(']]');
-    });
-
-    app.factory('MessagesFactory', function ($websocket) {
-        var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
-        var dataStream = $websocket(ws_scheme.concat('://', window.location.host, '/chat/'));
-
-        var collection = [];
-
-        dataStream.onMessage(function (message) {
-            console.log('onMessage', message);
-            collection.push(JSON.parse(message.data));
+{% block extra_js %}
+    <script>
+        var app = angular.module('chatApp', ['ngWebSocket', 'ngRoute']);
+        app.config(function ($interpolateProvider) {
+            $interpolateProvider.startSymbol('[[');
+            $interpolateProvider.endSymbol(']]');
         });
 
-        dataStream.onOpen(function (message) {
-            //dataStream.send(JSON.stringify(message));
+        app.factory('MessagesFactory', function ($websocket) {
+            var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+            var dataStream = $websocket(ws_scheme.concat('://', window.location.host, '/chat/'));
+
+            var collection = [];
+
+            dataStream.onMessage(function (message) {
+                console.log('onMessage', message);
+                collection.push(JSON.parse(message.data));
+            });
+
+            dataStream.onOpen(function (message) {
+                //dataStream.send(JSON.stringify(message));
+            });
+
+            return {
+                collection: collection,
+                send: function (message) {
+                    console.log(message);
+                    dataStream.send(JSON.stringify(message));
+                }
+            };
         });
 
-        return {
-            collection: collection,
-            send: function (message) {
-                console.log(message);
-                dataStream.send(JSON.stringify(message));
+        app.controller('MessagesController', function ($scope, MessagesFactory) {
+            $scope.user = '{{ request.user.username }}'
+            $scope.messages = MessagesFactory.collection;
+
+            $scope.submit = function (user, msgText) {
+                MessagesFactory.send({"user": user, "msgText": msgText});
+                $scope.msgText = '';
             }
-        };
-    });
-
-    app.controller('MessagesController', function ($scope, MessagesFactory) {
-        $scope.user = '{{ request.user.username }}'
-        $scope.messages = MessagesFactory.collection;
-
-        $scope.submit = function (user, msgText) {
-            MessagesFactory.send({"user": user, "msgText": msgText});
-            $scope.msgText = '';
-        }
-    });
-</script>
-</body>
-</html>
+        });
+    </script>
+{% endblock %}
