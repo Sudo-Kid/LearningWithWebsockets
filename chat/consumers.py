@@ -6,8 +6,8 @@ from channels.auth import channel_session_user
 from channels.auth import channel_session_user_from_http
 
 
-def select_room(message):
-    if message.user.is_authenticated() and message.user.is_active:
+def select_room(request):
+    if request.user.is_authenticated() and request.user.is_active:
         return ['auth-chat']
     else:
         return ['no-auth-chat']
